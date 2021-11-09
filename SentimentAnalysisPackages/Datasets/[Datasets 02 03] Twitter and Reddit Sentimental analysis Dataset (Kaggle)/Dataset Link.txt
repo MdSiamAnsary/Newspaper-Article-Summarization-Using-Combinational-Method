@@ -1,0 +1,6 @@
+Twitter and Reddit Sentimental analysis Dataset
+Tweets and Comments extracted from Twitter and Reddit For Sentimental Analysis.
+
+Chaithanya Kumar A
+
+https://www.kaggle.com/cosmos98/twitter-and-reddit-sentimental-analysis-dataset

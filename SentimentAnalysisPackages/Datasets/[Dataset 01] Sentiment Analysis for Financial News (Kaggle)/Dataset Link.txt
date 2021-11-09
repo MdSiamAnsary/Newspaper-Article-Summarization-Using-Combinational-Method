@@ -1,0 +1,6 @@
+Sentiment Analysis for Financial News
+Dataset contains two columns, Sentiment and News Headline
+
+Ankur Sinha
+
+https://www.kaggle.com/ankurzing/sentiment-analysis-for-financial-news
