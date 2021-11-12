@@ -14,6 +14,7 @@ import pandas as pd
 from rake_nltk import *
 from nltk.tokenize import sent_tokenize
 import nltk
+from textblob import TextBlob
 # nltk.download('stopwords')
 from nltk.corpus import stopwords
 # nltk.download('punkt') # one time execution
@@ -250,7 +251,12 @@ class PageOne(tk.Frame):
 
                 total_sen_count = len(lines)
 
-                article_category =  str(self.article_cat.get())
+                try:
+                    article_category =  str(self.article_cat.get())
+                except:
+                    article_category =  "Entertainment"
+
+                # article_category =  str(self.article_cat.get())
 
                 if article_category == "Sports":
                     with open('sport_phraselist.pkl', 'rb') as f_s:
@@ -332,6 +338,7 @@ class PageOne(tk.Frame):
                 # remove stopwords from the sentences
                 self.clean_sentences = [self.remove_stopwords(r.split()) for r in self.clean_sentences]
 
+                '''
                 # Extract word vectors
                 word_embeddings = {}
                 f = open('glove.6B.100d.txt', encoding='utf-8')
@@ -341,6 +348,7 @@ class PageOne(tk.Frame):
                     coefs = np.asarray(values[1:], dtype='float32')
                     word_embeddings[word] = coefs
                 f.close()
+                '''
 
                 self.sentence_vectors = []
                 for i in self.clean_sentences:
@@ -385,11 +393,11 @@ class PageOne(tk.Frame):
                         # summary = summary + str(TextBlob(sen).correct()) + " "
                         self.summ = self.summ + " " + str(TextBlob(eachSen).correct()) + " "
 
-                self.generated_summ.set(self.summ)
+                # self.generated_summ.set(self.summ)
 
                 self.ent2.configure(state='normal')
                 self.ent2.delete('1.0', END)
-                self.ent2.insert(INSERT, self.generated_summ.get())
+                self.ent2.insert(INSERT, self.summ)
                 self.ent2.configure(state='disabled')
 
 
@@ -449,7 +457,7 @@ class PageOne(tk.Frame):
     def savedindb(self):
 
 
-        if self.generated_summ.get() != '':
+        if self.summ != '':
 
             cur.execute("INSERT INTO summarytable VALUES (NULL,?, ?, ?, ?)",
                         (self.user, self.url, self.article, self.summ))
@@ -465,29 +473,37 @@ class PageOne(tk.Frame):
 
     def saveintxt(self):
 
-        if str(self.generated_summ.get()) == '':
+        try:
+
+            if str(self.summ) == '':
+                return
+            else:
+                now = datetime.now()
+                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+                dt_string = re.sub(r"[/:]", " ", dt_string)
+                file_name = "Summarization file " + dt_string + ".txt"
+
+                article = re.sub(r'\n+', '\n', self.article)
+                summary = re.sub(r'\n+', '\n', self.generated_summ.get())
+
+                text_file = open(file_name, "w")
+                text_file.write("Newspaper Article URL: " + self.url + "\n\n\n")
+                text_file.write("Newspaper Article: \n\n\n" + article + "\n\n\n")
+                text_file.write("Summary: \n\n\n" + summary + "\n")
+                text_file.close()
+
+                full_path = os.path.realpath(__file__)
+                path, filename = os.path.split(full_path)
+                path = os.path.realpath(path)
+                os.startfile(path)
+
+        except:
+            messagebox.showerror('Error', 'Error occurred')
             return
-        else:
 
+            
 
-            now = datetime.now()
-            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-            dt_string = re.sub(r"[/:]", " ", dt_string)
-            file_name = "Summarization file " + dt_string + ".txt"
-
-            article = re.sub(r'\n+', '\n', self.article)
-            summary = re.sub(r'\n+', '\n', self.generated_summ.get())
-
-            text_file = open(file_name, "w")
-            text_file.write("Newspaper Article URL: " + self.url + "\n\n\n")
-            text_file.write("Newspaper Article: \n\n\n" + article + "\n\n\n")
-            text_file.write("Summary: \n\n\n" + summary + "\n")
-            text_file.close()
-
-            full_path = os.path.realpath(__file__)
-            path, filename = os.path.split(full_path)
-            path = os.path.realpath(path)
-            os.startfile(path)
+        
 
     def clear(self):
 
