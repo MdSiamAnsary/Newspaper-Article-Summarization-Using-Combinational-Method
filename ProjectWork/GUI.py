@@ -473,33 +473,27 @@ class PageOne(tk.Frame):
 
     def saveintxt(self):
 
-        try:
-
-            if str(self.summ) == '':
-                return
-            else:
-                now = datetime.now()
-                dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
-                dt_string = re.sub(r"[/:]", " ", dt_string)
-                file_name = "Summarization file " + dt_string + ".txt"
-
-                article = re.sub(r'\n+', '\n', self.article)
-                summary = re.sub(r'\n+', '\n', self.generated_summ.get())
-
-                text_file = open(file_name, "w")
-                text_file.write("Newspaper Article URL: " + self.url + "\n\n\n")
-                text_file.write("Newspaper Article: \n\n\n" + article + "\n\n\n")
-                text_file.write("Summary: \n\n\n" + summary + "\n")
-                text_file.close()
-
-                full_path = os.path.realpath(__file__)
-                path, filename = os.path.split(full_path)
-                path = os.path.realpath(path)
-                os.startfile(path)
-
-        except:
-            messagebox.showerror('Error', 'Error occurred')
+        if str(self.summ) == '':
             return
+        else:
+            now = datetime.now()
+            dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
+            dt_string = re.sub(r"[/:]", " ", dt_string)
+            file_name = "Summarization file " + dt_string + ".txt"
+
+            article = re.sub(r'\n+', '\n', self.article)
+            summary = re.sub(r'\n+', '\n', self.summ)
+
+            text_file = open(file_name, "w")
+            text_file.write("Newspaper Article URL: " + self.url + "\n\n\n")
+            text_file.write("Newspaper Article: \n\n\n" + article + "\n\n\n")
+            text_file.write("Summary: \n\n\n" + summary + "\n")
+            text_file.close()
+
+            full_path = os.path.realpath(__file__)
+            path, filename = os.path.split(full_path)
+            path = os.path.realpath(path)
+            os.startfile(path)
 
             
 
@@ -511,11 +505,13 @@ class PageOne(tk.Frame):
         self.ent2.configure(state='normal')
         self.ent1.delete('1.0', END)
         self.ent2.delete('1.0', END)
-        self.generated_summ = ''
+        self.generated_summ.set('')
         self.summary = ''
-        self.article_cat= self.OPTIONS[0]
+        self.article_cat.set(self.OPTIONS[0])
+        # self.article_cat= self.OPTIONS[0]
         self.article = ''
         self.url = ''
+        self.summ = ''
 
     def close(self):
         return True
