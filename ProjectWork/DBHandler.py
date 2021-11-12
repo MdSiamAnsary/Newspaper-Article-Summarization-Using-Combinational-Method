@@ -33,4 +33,4 @@ class Database:
         self.conn.close()
 
 
-db = Database('summarizationDBFour.db')
+db = Database('summproject.db')

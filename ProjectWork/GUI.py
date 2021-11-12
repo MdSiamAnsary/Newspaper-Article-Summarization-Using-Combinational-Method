@@ -27,7 +27,7 @@ import warnings
 warnings.simplefilter("ignore")
 
 # ------ ------ DB object and connection variables
-db = "summarizationDBFour.db"
+db = "summproject.db"
 conn = sqlite3.connect(db)
 cur = conn.cursor()
 
@@ -91,6 +91,7 @@ class PageOne(tk.Frame):
 
         self.article = StringVar()
         self.generated_summ = StringVar()
+        self.summ = ""
         self.url = StringVar()
         self.user = StringVar()
 
@@ -286,7 +287,7 @@ class PageOne(tk.Frame):
 
                 # self.sentences = sent_tokenize(lines)
 
-                print(self.sentences)
+                # print(self.sentences)
 
 
 
@@ -445,10 +446,20 @@ class PageOne(tk.Frame):
 
     def clearinputs(self):
         self.ent_url.delete(0, END)
-
+        self.ent_uname.delete(0, END)
+        self.article_cat.set(self.OPTIONS[0])
         self.ent1.configure(state='normal')
         self.ent1.delete('1.0', END)
         self.ent1.configure(state='disabled')
+        self.ent1.configure(state='normal')
+        self.ent2.configure(state='normal')
+        self.ent1.delete('1.0', END)
+        self.ent2.delete('1.0', END)
+        self.generated_summ.set('')
+        self.summary = ''
+        self.article = ''
+        self.url = ''
+        self.summ = ''
 
 
 
@@ -512,15 +523,7 @@ class PageOne(tk.Frame):
         self.article = ''
         self.url = ''
         self.summ = ''
-
-    def close(self):
-        return True
-
-    def checkrecords(self):
-        return True
-
-
-
+        
 
 
 
